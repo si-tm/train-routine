@@ -1,0 +1,6 @@
+name = "memo-worker"
+main = "index.js"
+compatibility_date = "2025-08-19"
+
+[vars]
+# 環境変数に設定するのでここには書かない

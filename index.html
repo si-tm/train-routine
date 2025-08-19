@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今日の学習ルーティン</title>
+<style>
+  /* --- ベース --- */
+  body { 
+    font-family: 'Helvetica', 'Arial', sans-serif; 
+    margin: 10px; 
+    background-color: #e0f7fa; 
+    color: #01579b;
+  }
+  h1, h2 { 
+    color: #0288d1; 
+    text-align: center; 
+  }
+  ul { 
+    margin-bottom: 20px; 
+    padding-left: 20px; 
+  }
+  li a { 
+    text-decoration: none; 
+    color: #0277bd; 
+  }
+  li a:hover { 
+    text-decoration: underline; 
+    color: #81d4fa;
+  }
+
+  /* --- メモ --- */
+  textarea { 
+    width: 100%; 
+    height: 80px; 
+    margin-bottom: 10px; 
+    border-radius: 8px; 
+    border: 2px solid #4fc3f7; 
+    padding: 8px; 
+    font-size: 16px;
+  }
+  button { 
+    background-color: #4fc3f7; 
+    color: white; 
+    border: none; 
+    border-radius: 8px; 
+    padding: 8px 16px; 
+    font-size: 16px; 
+    cursor: pointer; 
+  }
+  button:hover { 
+    background-color: #29b6f6; 
+  }
+
+  /* --- レスポンシブ調整 --- */
+  @media (max-width: 600px) {
+    body { margin: 5px; }
+    h1, h2 { font-size: 1.5em; }
+    textarea { font-size: 14px; height: 60px; }
+    button { font-size: 14px; padding: 6px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>今日の学習ルーティン</h1>
+
+<h2>IT記事（ランダム）</h2>
+<ul id="it-articles"></ul>
+
+<h2>セキュリティ記事（ランダム）</h2>
+<ul id="security-articles"></ul>
+
+<h2>メモ</h2>
+<textarea id="memo-input" placeholder="今日学んだことや疑問を入力"></textarea>
+<button onclick="appendMemo()">GitHubに追記</button>
+
+<script>
+// ---- RSSランダム表示 ----
+const RSS_FEEDS = {
+  it: "https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml",
+  security: "https://rss.itmedia.co.jp/rss/2.0/security.xml"
+};
+const CORS_PROXY = "https://api.allorigins.win/get?url=";
+
+async function fetchAndDisplay(feedUrl, ulId, maxArticles=3) {
+  try {
+    const response = await fetch(CORS_PROXY + encodeURIComponent(feedUrl));
+    const data = await response.json();
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(data.contents, "application/xml");
+    const items = Array.from(xml.querySelectorAll("item"));
+
+    // 配列シャッフル
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+
+    const ul = document.getElementById(ulId);
+    items.slice(0, maxArticles).forEach(item => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = item.querySelector("link").textContent;
+      a.textContent = item.querySelector("title").textContent;
+      a.target = "_blank";
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+  } catch (err) {
+    console.log("RSS取得エラー:", err);
+  }
+}
+
+fetchAndDisplay(RSS_FEEDS.it, "it-articles", 3);
+fetchAndDisplay(RSS_FEEDS.security, "security-articles", 3);
+
+// ---- GitHub memo.md 追記 ----
+const githubUsername = GITHUB_USERNAME;
+const repo = "train-routine";
+const filePath = "memo.md";
+const token = PERSONAL_ACCESS_TOKEN; // ⚠️ブラウザ直書きはリスク大
+
+async function appendMemo() {
+  const newText = document.getElementById("memo-input").value.trim();
+  if (!newText) { alert("メモを入力してください"); return; }
+
+  const getUrl = `https://api.github.com/repos/${githubUsername}/${repo}/contents/${filePath}`;
+  try {
+    const getRes = await fetch(getUrl, {
+      headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" }
+    });
+    const fileData = await getRes.json();
+    const sha = fileData.sha;
+    const content = atob(fileData.content);
+
+    const updatedContent = content + `\n- ${newText}`;
+    const putRes = await fetch(getUrl, {
+      method: "PUT",
+      headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" },
+      body: JSON.stringify({
+        message: `Add memo entry: ${newText}`,
+        content: btoa(updatedContent),
+        sha: sha
+      })
+    });
+
+    if (putRes.ok) {
+      alert("memo.mdに追記しました！");
+      document.getElementById("memo-input").value = "";
+    } else {
+      const err = await putRes.json();
+      console.error(err);
+      alert("更新に失敗しました");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("エラーが発生しました");
+  }
+}
+</script>
+
+</body>
+</html>

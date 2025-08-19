@@ -8,8 +8,10 @@ jobs:
   update-memo:
     runs-on: ubuntu-latest
     steps:
-      # コードをチェックアウト
+      # コードをチェックアウト (GITHUB_TOKEN を無視)
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
       # メモを追記
       - name: Append memo
@@ -21,22 +23,16 @@ jobs:
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          # Git 設定
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # 固定ブランチを作成/チェックアウト
           BRANCH=add-memo
           git checkout -B $BRANCH
 
-          # 状態確認
           git status
-
-          # 変更を commit
           git add memo.md
           git commit -m "Add memo" || echo "No changes to commit"
 
-          # push
           git push https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH
 
       # Pull Request 作成または更新

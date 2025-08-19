@@ -1,24 +1,28 @@
+
 async function sendMemo() {
   const text = document.getElementById("memo-input").value.trim();
-  if (!text) { alert("メモを入力してください"); return; }
+  if (!text) return alert("メモを入力してください");
 
-  try {
-    const res = await fetch("/.netlify/functions/append-memo", { // サーバー側で安全に処理
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ memo: text })
-    });
+  const res = await fetch("https://api.github.com/repos/si-tm/train-routine/dispatches", {
+    method: "POST",
+    headers: {
+      "Accept": "application/vnd.github+json",
+      "Content-Type": "application/json"
+      // ★ Authorization ヘッダ不要（完全公開にするなら）
+    },
+    body: JSON.stringify({
+      event_type: "add-memo",
+      client_payload: { text: text }
+    })
+  });
 
-    if (res.ok) {
-      alert("メモ送信しました！");
-      document.getElementById("memo-input").value = "";
-    } else {
-      const err = await res.json();
-      console.error(err);
-      alert("送信失敗");
-    }
-  } catch(e) {
-    console.error(e);
-    alert("エラーが発生しました");
+  if (res.ok) {
+    alert("メモを送信しました！（Actionsが保存します）");
+    document.getElementById("memo-input").value = "";
+  } else {
+    const err = await res.json();
+    console.error("送信失敗", err);
+    alert("送信失敗");
   }
 }
+

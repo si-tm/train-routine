@@ -6,16 +6,16 @@ async function sendMemo() {
   if (!key) { alert("送信キーを入力してください"); return; }
 
   try {
-    const res = await fetch("https://api.github.com/repos/YOUR_USERNAME/train-routine/dispatches", {
+    const res = await fetch("https://api.github.com/repos/si-tm/train-routine/dispatches", {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
         "Accept": "application/vnd.github+json",
-        // GitHubトークンは不要、Actions側でリポジトリシークレットを使う
+        "Authorization": `token ${key}` // キーをここで使う
       },
       body: JSON.stringify({
         event_type: "append_memo",
-        client_payload: { memo: text, key: key } // ここにユーザー送信キーを入れる
+        client_payload: { memo: text }
       })
     });
 

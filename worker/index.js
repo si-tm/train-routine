@@ -1,6 +1,5 @@
 export default {
   async fetch(request, env) {
-    // CORS ヘッダー
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -9,8 +8,7 @@ export default {
 
     // プリフライト OPTIONS
     if (request.method === "OPTIONS") {
-      // 204 に body を入れないことが重要
-      return new Response(undefined, { status: 204, headers: corsHeaders });
+      return new Response(null, { status: 204, headers: corsHeaders });
     }
 
     // POST 以外は拒否
@@ -22,7 +20,6 @@ export default {
       const body = await request.json();
       const note = body.note || "";
 
-      // GitHub API に repository_dispatch
       const res = await fetch(
         "https://api.github.com/repos/si-tm/train-routine/dispatches",
         {
@@ -31,7 +28,7 @@ export default {
             "Accept": "application/vnd.github+json",
             "Authorization": `token ${env.GITHUB_TOKEN}`,
             "Content-Type": "application/json",
-            "User-Agent": "densha-routine-worker" // 必須
+            "User-Agent": "densha-routine-worker"
           },
           body: JSON.stringify({ event_type: "add-memo", client_payload: { note } })
         }
@@ -44,7 +41,6 @@ export default {
         { status: res.status, headers: corsHeaders }
       );
     } catch (err) {
-      // ここで必ず body を持たせる（500 は body OK）
       return new Response(`Internal Server Error: ${err}`, { status: 500, headers: corsHeaders });
     }
   }

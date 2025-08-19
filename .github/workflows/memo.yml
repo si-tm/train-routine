@@ -1,21 +1,23 @@
-name: Save Memo
+name: Memo Append
 
 on:
   repository_dispatch:
     types: [add-memo]
 
 jobs:
-  save-memo:
+  update-memo:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Update memo.md
+      - name: Append memo
         run: |
-          echo "${{ github.event.client_payload.text }}" >> memo.md
+          echo "$(date '+%Y-%m-%d %H:%M:%S') ${{ github.event.client_payload.note }}" >> memo.md
+
+      - name: Commit & Push
+        run: |
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add memo.md
-          git commit -m "Add memo via Actions"
+          git commit -m "Add memo"
           git push

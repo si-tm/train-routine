@@ -8,26 +8,38 @@ jobs:
   update-memo:
     runs-on: ubuntu-latest
     steps:
+      # コードをチェックアウト
       - uses: actions/checkout@v3
 
+      # メモを追記
       - name: Append memo
         run: |
           echo "$(date '+%Y-%m-%d %H:%M:%S') ${{ github.event.client_payload.note }}" >> memo.md
 
+      # Commit & Push using PAT
       - name: Commit & Push using PAT
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
+          # Git 設定
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          # 固定ブランチを作成/チェックアウト
           BRANCH=add-memo
-          git checkout -B $BRANCH   # -B でブランチが存在しても上書き可能
+          git checkout -B $BRANCH
 
+          # 状態確認
+          git status
+
+          # 変更を commit
           git add memo.md
           git commit -m "Add memo" || echo "No changes to commit"
+
+          # push
           git push https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH
 
+      # Pull Request 作成または更新
       - name: Create or Update Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
@@ -35,5 +47,4 @@ jobs:
           base: main
           title: "Add memo from Worker"
           body: "This PR adds new memos submitted via Worker."
-          # PR が存在すれば更新
           update-existing: true

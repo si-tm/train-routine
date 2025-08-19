@@ -8,7 +8,7 @@ export default {
     const note = body.note || "";
 
     // GitHub repository_dispatch を叩く
-    const res = await fetch(`https://api.github.com/repos/si-tm/train-routine/dispatches`, {
+    const res = await fetch(`://api.github.com/repos/si-tm/train-routine/dispatches`, {
       method: "POST",
       headers: {
         "Accept": "application/vnd.github+json",

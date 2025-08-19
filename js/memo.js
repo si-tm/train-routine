@@ -1,7 +1,7 @@
 async function sendMemo() {
   const note = document.getElementById("memoInput").value;
 
-  const res = await fetch("https://densha-routine.workers.dev", {
+  const res = await fetch("https://memo-worker.densha-routine.workers.dev", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ note })

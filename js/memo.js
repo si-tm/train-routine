@@ -1,4 +1,3 @@
-
 async function sendMemo() {
   const text = document.getElementById("memo-input").value.trim();
   if (!text) return alert("メモを入力してください");
@@ -25,4 +24,3 @@ async function sendMemo() {
     alert("送信失敗");
   }
 }
-

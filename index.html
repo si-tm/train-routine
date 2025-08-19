@@ -1,28 +1,27 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>今日の学習ルーティン</title>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>今日の学習ルーティン</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<h1>今日の学習ルーティン</h1>
+  <h1>今日の学習ルーティン</h1>
 
-<h2>IT記事（ランダム）</h2>
-<ul id="it-articles"></ul>
+  <h2>IT記事（ランダム）</h2>
+  <ul id="it-articles"></ul>
 
-<h2>セキュリティ記事（ランダム）</h2>
-<ul id="security-articles"></ul>
+  <h2>セキュリティ記事（ランダム）</h2>
+  <ul id="security-articles"></ul>
 
-<h2>メモ</h2>
-<input id="memoInput" type="text" placeholder="メモを入力" />
-<button onclick="sendMemo()">送信</button>
-<script src="js/memo.js"></script>
+  <h2>メモ</h2>
+  <input id="memoInput" type="text" placeholder="メモを入力" />
+  <button onclick="sendMemo()">送信</button>
 
-<script src="js/rss.js"></script>
-<script src="js/memo.js"></script>
-
+  <!-- JSの読み込み順に注意 -->
+  <script src="js/rss.js"></script>
+  <script src="js/memo.js"></script>
 </body>
 </html>

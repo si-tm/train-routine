@@ -20,18 +20,20 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          BRANCH=add-memo-${GITHUB_RUN_ID}
-          git checkout -b $BRANCH
-          
+
+          BRANCH=add-memo
+          git checkout -B $BRANCH   # -B でブランチが存在しても上書き可能
+
           git add memo.md
-          git commit -m "Add memo"
+          git commit -m "Add memo" || echo "No changes to commit"
           git push https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH
 
-      - name: Create Pull Request
+      - name: Create or Update Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          branch: add-memo-${{ github.run_id }}
+          branch: add-memo
           base: main
           title: "Add memo from Worker"
-          body: "This PR adds a new memo submitted via Worker."
+          body: "This PR adds new memos submitted via Worker."
+          # PR が存在すれば更新
+          update-existing: true

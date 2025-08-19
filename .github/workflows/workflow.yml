@@ -1,36 +1,21 @@
-# .github/workflows/workflow.yml
 name: Append Memo
-
 on:
   repository_dispatch:
     types: [append_memo]
 
 jobs:
-  append-memo:
+  append:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Append memo
-        env:
-          SECRET_KEY: ${{ secrets.MEMO_KEY }}  # Repository Secretに設定
+      - uses: actions/checkout@v3
+      - name: Get payload
         run: |
-          echo "Checking payload key..."
-          PAYLOAD_KEY=$(jq -r '.client_payload.key' <<<"$GITHUB_EVENT_CLIENT_PAYLOAD")
-          MEMO_TEXT=$(jq -r '.client_payload.memo' <<<"$GITHUB_EVENT_CLIENT_PAYLOAD")
-
-          if [ "$PAYLOAD_KEY" != "$SECRET_KEY" ]; then
-            echo "Invalid key, aborting"
-            exit 1
-          fi
-
-          # memo.md に追記
-          echo "- $MEMO_TEXT" >> memo.md
-
-          # git コミット & push
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          MEMO="${{ github.event.client_payload.memo }}"
+          echo "- $MEMO" >> memo.md
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
           git add memo.md
-          git commit -m "Add memo: $MEMO_TEXT"
+          git commit -m "Add memo: $MEMO"
           git push

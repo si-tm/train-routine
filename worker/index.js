@@ -8,7 +8,7 @@ export default {
 
     // プリフライト OPTIONS
     if (request.method === "OPTIONS") {
-      return new Response(null, { status: 204, headers: corsHeaders });
+      return new Response("", { status: 204, headers: corsHeaders });
     }
 
     // POST 以外は拒否
@@ -37,9 +37,10 @@ export default {
       const text = await res.text();
 
       return new Response(
-        res.ok ? "ok" : `GitHub API error: ${text}`,
-        { status: res.status, headers: corsHeaders }
-      );
+          res.ok ? "ok" : `GitHub API error: ${text}`,
+          { status: res.ok ? 200 : res.status, headers: corsHeaders }
+        );
+
     } catch (err) {
       return new Response(`Internal Server Error: ${err}`, { status: 500, headers: corsHeaders });
     }

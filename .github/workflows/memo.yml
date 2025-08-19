@@ -8,17 +8,17 @@ jobs:
   update-memo:
     runs-on: ubuntu-latest
     steps:
-      # コードをチェックアウト (GITHUB_TOKEN を無視)
+      # 1. コードをチェックアウト (GITHUB_TOKEN を無視)
       - uses: actions/checkout@v3
         with:
           persist-credentials: false
 
-      # メモを追記
+      # 2. メモを追記
       - name: Append memo
         run: |
           echo "$(date '+%Y-%m-%d %H:%M:%S') ${{ github.event.client_payload.note }}" >> memo.md
 
-      # Commit & Push using PAT
+      # 3. Commit & Push using PAT
       - name: Commit & Push using PAT
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
@@ -35,12 +35,11 @@ jobs:
 
           git push https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH
 
-      # Pull Request 作成または更新
+      # 4. Pull Request 作成または更新
       - name: Create or Update Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          branch: add-memo
-          base: main
+          branch: add-memo      # PR で使用するブランチ
+          base: main            # PR のベース
           title: "Add memo from Worker"
           body: "This PR adds new memos submitted via Worker."
-          update-existing: true

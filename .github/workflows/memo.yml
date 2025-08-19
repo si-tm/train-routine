@@ -14,10 +14,24 @@ jobs:
         run: |
           echo "$(date '+%Y-%m-%d %H:%M:%S') ${{ github.event.client_payload.note }}" >> memo.md
 
-      - name: Commit & Push
+      - name: Commit & Push using PAT
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          BRANCH=add-memo-${GITHUB_RUN_ID}
+          git checkout -b $BRANCH
+          
           git add memo.md
           git commit -m "Add memo"
-          git push
+          git push https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: add-memo-${{ github.run_id }}
+          base: main
+          title: "Add memo from Worker"
+          body: "This PR adds a new memo submitted via Worker."

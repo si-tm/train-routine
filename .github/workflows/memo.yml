@@ -12,34 +12,31 @@ jobs:
       - uses: actions/checkout@v3
         with:
           persist-credentials: false
+          fetch-depth: 0   # 履歴を全部取得しておく
 
-      # 2. メモを追記
+      # 2. リモートブランチを最新化してからメモを追記
       - name: Append memo
-        run: |
-          echo "$(date '+%Y-%m-%d %H:%M:%S') ${{ github.event.client_payload.note }}" >> memo.md
-
-      # 3. Commit & Push using PAT safely
-      - name: Commit & Push using PAT
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
+          BRANCH=add-memo
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config pull.rebase false   # pull = merge に設定
 
-          BRANCH=add-memo
-          git checkout -B $BRANCH
+          # リモートの履歴を優先して最新化
+          git fetch origin $BRANCH || true
+          git checkout -B $BRANCH origin/$BRANCH || git checkout -b $BRANCH
+
+          # メモ追記
+          echo "$(date '+%Y-%m-%d %H:%M:%S') ${{ github.event.client_payload.note }}" >> memo.md
 
           git add memo.md
           git commit -m "Add memo" || echo "No changes to commit"
 
-          # リモートの変更を安全に取り込み (リモート優先でマージ)
-          git pull --no-rebase --strategy-option theirs https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH || echo "No remote changes"
+          # 強制 push (リモート優先・ローカル無視)
+          git push https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH --force-with-lease
 
-          # push
-          git push https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH
-
-      # 4. Pull Request 作成または更新
+      # 3. Pull Request 作成または更新
       - name: Create or Update Pull Request
         uses: peter-evans/create-pull-request@v5
         with:

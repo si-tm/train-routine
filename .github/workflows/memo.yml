@@ -8,7 +8,7 @@ jobs:
   update-memo:
     runs-on: ubuntu-latest
     steps:
-      # 1. コードをチェックアウト
+      # 1. コードをチェックアウト (PAT を使うので GitHub Token は無効化)
       - uses: actions/checkout@v3
         with:
           persist-credentials: false
@@ -29,18 +29,14 @@ jobs:
           BRANCH=add-memo
           git checkout -B $BRANCH
 
-          # 先にローカルの変更をコミットしておく
           git add memo.md
           git commit -m "Add memo" || echo "No changes to commit"
 
-          # リモートの変更を取り込み
-          git fetch https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH
+          # リモートの変更をマージ (衝突がなければ自動で解決)
+          git pull https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH --no-edit || echo "No remote changes"
 
-          # ローカルをリモートにリベース（conflict なら abort）
-          git rebase FETCH_HEAD || git rebase --abort
-
-          # push（force-with-leaseで安全に上書き）
-          git push https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH --force-with-lease
+          # push
+          git push https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH
 
       # 4. Pull Request 作成または更新
       - name: Create or Update Pull Request

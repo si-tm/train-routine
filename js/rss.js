@@ -1,10 +1,11 @@
 const RSS_FEEDS = {
   it: "https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml",
-  security: "https://rss.itmedia.co.jp/rss/2.0/security.xml"
+  security: "https://rss.itmedia.co.jp/rss/2.0/security.xml",
+  bbc: "http://feeds.bbci.co.uk/news/technology/rss.xml"
 };
 const CORS_PROXY = "https://api.allorigins.win/get?url=";
 
-async function fetchAndDisplay(feedUrl, ulId, maxArticles=3) {
+async function fetchAndDisplay(feedUrl, ulId, maxArticles=2) {
   try {
     const response = await fetch(CORS_PROXY + encodeURIComponent(feedUrl));
     const data = await response.json();
@@ -32,5 +33,6 @@ async function fetchAndDisplay(feedUrl, ulId, maxArticles=3) {
   }
 }
 
-fetchAndDisplay(RSS_FEEDS.it, "it-articles", 3);
-fetchAndDisplay(RSS_FEEDS.security, "security-articles", 3);
+fetchAndDisplay(RSS_FEEDS.it, "it-articles", 2);
+fetchAndDisplay(RSS_FEEDS.security, "security-articles", 2);
+fetchAndDisplay(RSS_FEEDS.bbc, "bbc-articles", 2);

@@ -16,28 +16,18 @@ jobs:
 
       # 2. リモートブランチを最新化してからメモを追記
       - name: Append memo
-        env:
-          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           BRANCH=add-memo
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # 最新の履歴を取得
           git fetch origin $BRANCH || true
-
-          # リモートブランチを強制的にベースにする
           git checkout -B $BRANCH origin/$BRANCH || git checkout -b $BRANCH
 
-          # メモ追記
           echo "$(date '+%Y-%m-%d %H:%M:%S') ${{ github.event.client_payload.note }}" >> memo.md
 
           git add memo.md
           git commit -m "Add memo" || echo "No changes to commit"
-
-          # fast-forward で push（リモート優先）
-          git pull origin $BRANCH --rebase || true
-          git push https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH
 
       # 3. Pull Request 作成または更新
       - name: Create or Update Pull Request

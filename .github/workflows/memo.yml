@@ -23,8 +23,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # リモートの履歴を優先して最新化
+          # 最新の履歴を取得
           git fetch origin $BRANCH || true
+
+          # リモートブランチを強制的にベースにする
           git checkout -B $BRANCH origin/$BRANCH || git checkout -b $BRANCH
 
           # メモ追記
@@ -33,8 +35,9 @@ jobs:
           git add memo.md
           git commit -m "Add memo" || echo "No changes to commit"
 
-          # 強制 push (リモート優先・ローカル無視)
-          git push https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH --force-with-lease
+          # fast-forward で push（リモート優先）
+          git pull origin $BRANCH --rebase || true
+          git push https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH
 
       # 3. Pull Request 作成または更新
       - name: Create or Update Pull Request

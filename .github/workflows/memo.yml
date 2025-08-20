@@ -25,17 +25,16 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config pull.rebase false   # pull = merge に設定
 
-          git pull origin main
           BRANCH=add-memo
           git checkout -B $BRANCH
-          git merge $BRANCH
 
           git add memo.md
           git commit -m "Add memo" || echo "No changes to commit"
 
-          # リモートの変更をマージ (衝突がなければ自動で解決)
-          git pull https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH --no-edit || echo "No remote changes"
+          # リモートの変更を安全に取り込み (リモート優先でマージ)
+          git pull --no-rebase --strategy-option theirs https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH || echo "No remote changes"
 
           # push
           git push https://x-access-token:${PAT_TOKEN}@github.com/si-tm/train-routine.git $BRANCH

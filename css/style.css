@@ -1,75 +1,90 @@
-/* ベース */
+/* css/style.css */
+.navbar {
+  background: linear-gradient(90deg, #0288d1, #26c6da);
+  padding: 10px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 8px 15px;
+  border-radius: 6px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.navbar a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+main {
+  padding-top: 60px;
+}
+
 body {
-  font-family: 'Helvetica', 'Arial', sans-serif;
-  background-color: #e0f7fa;
+  font-family: 'Kiwi Maru', serif; /* 全体フォント */
+  /* background-color: #e0f7fa; */
   color: #01579b;
   margin: 10px;
 }
 
-/* タイトル */
-h1 {
-  color: #0288d1;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
 h2 {
-  color: #039be5;
   text-align: center;
+  color: #039be5;
   margin: 15px 0;
 }
 
-/* 記事リスト */
-ul {
-  padding-left: 20px;
-  margin-bottom: 25px;
+h1 {
+  text-align: center;
+  color: #039be5;
+  margin: 15px 0;
 }
 
-li a {
-  text-decoration: none;
-  color: #0277bd;
-  font-weight: bold;
-}
-
-li a:hover {
-  color: #81d4fa;
-  text-decoration: underline;
-}
-
-/* メモ入力 */
-textarea, input[type="password"] {
-  width: 100%;
-  border-radius: 8px;
-  border: 2px solid #4fc3f7;
+input[type="text"],
+textarea {
+  width: 100%;       /* 幅100% */
+  max-width: 100%;   /* 横スクロール防止 */
+  box-sizing: border-box; /* パディング込みで幅を計算 */
   padding: 10px;
   font-size: 16px;
+  border-radius: 8px;
+  border: 2px solid #4fc3f7;
   margin-bottom: 10px;
-  box-sizing: border-box;
 }
 
-/* ボタン */
+/* メモ送信ボタン */
 button {
-  width: 100%;
+  width: 100%;               /* 幅いっぱい */
+  max-width: 100%;           /* 横スクロール防止 */
+  box-sizing: border-box;    /* パディング込みで幅を計算 */
   background-color: #4fc3f7;
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 10px;
+  padding: 12px;
   font-size: 16px;
   cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.3s, transform 0.2s;
 }
 
 button:hover {
   background-color: #29b6f6;
-}
-
-/* レスポンシブ調整 */
-@media (max-width: 600px) {
-  body {
-    margin: 5px;
-  }
-  h1 { font-size: 1.5em; }
-  h2 { font-size: 1.2em; }
-  textarea, input[type="password"] { font-size: 14px; height: 60px; }
-  button { font-size: 14px; padding: 8px; }
+  transform: translateY(-2px);
 }

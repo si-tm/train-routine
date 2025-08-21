@@ -24,7 +24,7 @@ jobs:
           git fetch origin $BRANCH || true
           git checkout -B $BRANCH origin/$BRANCH || git checkout -b $BRANCH
 
-          echo "\n $(date '+%Y-%m-%d %H:%M:%S') ${{ github.event.client_payload.note }}" >> memo.md
+          echo -e "\n$(date '+%Y-%m-%d %H:%M:%S') ${{ github.event.client_payload.note }}" >> memo.md
 
           git add memo.md
           git commit -m "Add memo" || echo "No changes to commit"

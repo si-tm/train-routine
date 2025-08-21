@@ -1,4 +1,4 @@
-/* css/style.css */
+/* ナビゲーションバー */
 .navbar {
   background: linear-gradient(90deg, #0288d1, #26c6da);
   padding: 10px 0;
@@ -9,15 +9,37 @@
   z-index: 1000;
 }
 
-.navbar ul {
-  list-style: none;
+/* PC用ナビ */
+.navbar .pc-nav {
   display: flex;
   justify-content: center;
   gap: 30px;
+  list-style: none;
   margin: 0;
   padding: 0;
 }
 
+/* SP用ナビ */
+.navbar .sp-nav {
+  display: none;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* メディアクエリで切替 */
+@media screen and (max-width: 768px) {
+  .navbar .pc-nav {
+    display: none;
+  }
+  .navbar .sp-nav {
+    display: flex;
+  }
+}
+
+/* リンクスタイル */
 .navbar a {
   color: white;
   text-decoration: none;
@@ -33,46 +55,40 @@
   transform: translateY(-2px);
 }
 
-main {
-  padding-top: 60px;
-}
-
+/* body・フォント */
 body {
-  font-family: 'Kiwi Maru', serif; /* 全体フォント */
-  /* background-color: #e0f7fa; */
+  font-family: 'Kiwi Maru', serif;
   color: #01579b;
-  margin: 10px;
+  margin: 0;
+  padding-top: 80px; /* 固定ヘッダー分の余白 */
 }
 
-h2 {
+/* 見出し */
+h1, h2 {
   text-align: center;
   color: #039be5;
   margin: 15px 0;
 }
 
-h1 {
-  text-align: center;
-  color: #039be5;
-  margin: 15px 0;
-}
-
+/* 入力欄 */
 input[type="text"],
 textarea {
-  width: 100%;       /* 幅100% */
-  max-width: 100%;   /* 横スクロール防止 */
-  box-sizing: border-box; /* パディング込みで幅を計算 */
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
   padding: 10px;
   font-size: 16px;
   border-radius: 8px;
   border: 2px solid #4fc3f7;
-  margin-bottom: 10px;
+  margin: 0 auto 10px auto;
+  display: block;
 }
 
-/* メモ送信ボタン */
+/* ボタン */
 button {
-  width: 100%;               /* 幅いっぱい */
-  max-width: 100%;           /* 横スクロール防止 */
-  box-sizing: border-box;    /* パディング込みで幅を計算 */
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
   background-color: #4fc3f7;
   color: white;
   border: none;
@@ -80,7 +96,8 @@ button {
   padding: 12px;
   font-size: 16px;
   cursor: pointer;
-  margin-bottom: 10px;
+  margin: 0 auto 10px auto;
+  display: block;
   transition: background 0.3s, transform 0.2s;
 }
 

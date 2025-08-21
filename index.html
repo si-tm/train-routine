@@ -14,7 +14,8 @@
 
   <!-- 🔹 上部ナビゲーションタブ -->
   <nav class="navbar">
-    <ul>
+    <!-- PC用ナビゲーション -->
+    <ul class="pc-nav">
       <li><a href="#bbc-articles">BBC</a></li>
       <li><a href="#it-articles">国内</a></li>
       <li><a href="#security-articles">セキュリティ</a></li>
@@ -23,39 +24,46 @@
       <li><a href="#sre-articles">SRE論文</a></li>
       <li><a href="#memoInput">メモ</a></li>
     </ul>
+
+    <!-- スマホ用ナビゲーション -->
+    <ul class="sp-nav">
+      <li><a href="#bbc-articles">🌍</a></li>
+      <li><a href="#it-articles">🗾</a></li>
+      <li><a href="#security-articles">🔒</a></li>
+      <li><a href="#atcoder-articles">💻</a></li>
+      <li><a href="#ctf-articles">🕵️‍♀️</a></li>
+      <li><a href="#sre-articles">📑</a></li>
+      <li><a href="#memoInput">📝</a></li>
+    </ul>
   </nav>
 
-  <br>
+  <main>
+    <h1>今日の学習ルーティン</h1>
+    
+    <h2 id="bbc-section">BBC</h2>
+    <ul id="bbc-articles"></ul>
 
-  <h1>今日の</h1>
-  
-  <h2 id="bbc-section">BBC</h2>
-  <ul id="bbc-articles"></ul>
+    <h2 id="it-section">IT</h2>
+    <ul id="it-articles"></ul>
 
-  <h2 id="it-section">IT</h2>
-  <ul id="it-articles"></ul>
+    <h2 id="security-section">セキュリティ</h2>
+    <ul id="security-articles"></ul>
 
-  <h2 id="security-section">セキュリティ</h2>
-  <ul id="security-articles"></ul>
+    <h2 id="atcoder-section">AtCoder</h2>
+    <ul id="atcoder-articles"></ul>
 
-  <h2 id="atcoder-section">AtCoder</h2>
-  <ul id="atcoder-articles"></ul>
+    <h2 id="ctf-section">CTF問題</h2>
+    <ul>
+      <li><a href="https://trailofbits.github.io/ctf/index.html">trailofbits</a></li>
+    </ul>
 
-  <h2 id="ctf-section">CTF問題</h2>
-  <!-- <ul id="ctf-articles"></ul> -->
-   <!-- しおり機能 + 設定画面作りたい -->
-   <ul>
-    <li>
-      <a href="https://trailofbits.github.io/ctf/index.html">trailofbits</a>
-    </li>
-  </ul> 
+    <h2 id="sre-section">SRE関連論文</h2>
+    <ul id="sre-articles"></ul>
 
-  <h2 id="sre-section">SRE関連論文</h2>
-  <ul id="sre-articles"></ul>
-
-  <h2>メモ</h2>
-  <input id="memoInput" type="text" placeholder="メモを入力" />
-  <button onclick="sendMemo()">送信</button>
+    <h2>メモ</h2>
+    <input id="memoInput" type="text" placeholder="メモを入力" />
+    <button onclick="sendMemo()">送信</button>
+  </main>
 
   <!-- JSの読み込み順に注意 -->
   <script src="js/rss.js"></script>
